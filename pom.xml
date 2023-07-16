@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.11</version>
+    </parent>
+
+    <groupId>stark.coderaider</groupId>
+    <artifactId>cygnus-executor</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-cloud.version>2021.0.4</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.4.0</spring-cloud-alibaba.version>
+        <dataworks.version>0.0.1-SNAPSHOT</dataworks.version>
+        <dubbo.version>3.1.3</dubbo.version>
+        <nacos.version>2.1.2</nacos.version>
+
+        <cygnus-registration.version>0.0.1-SNAPSHOT</cygnus-registration.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>stark.coderaider</groupId>
+            <artifactId>cygnus-registration-common</artifactId>
+            <version>${cygnus-registration.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>stark.dataworks</groupId>
+            <artifactId>web-commons</artifactId>
+            <version>${dataworks.version}</version>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <name>rdc-snapshots</name>
+            <url>https://packages.aliyun.com/maven/repository/2230493-snapshot-dLtaP7/</url>
+        </snapshotRepository>
+        <repository>
+            <id>rdc-releases</id>
+            <name>rdc-releases</name>
+            <url>https://packages.aliyun.com/maven/repository/2230493-release-3OZLCz/</url>
+        </repository>
+    </distributionManagement>
+</project>
