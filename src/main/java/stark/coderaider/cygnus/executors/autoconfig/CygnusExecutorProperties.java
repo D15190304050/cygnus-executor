@@ -13,8 +13,15 @@ import org.springframework.stereotype.Component;
 @Data
 public class CygnusExecutorProperties
 {
-    private String appName;
-    private String groupName;
+    private String applicationName;
+    private String groupName = "default";
     private int port = 28994;
-    private String registryCenterAddress;
+
+    private String zkAddress;
+    private int sessionTimeoutMs;
+    private int connectionTimeoutMs;
+    private int baseSleepTimeMs;
+    private int maxRetries;
+
+    private int heartbeatMs = 30 * 1000;
 }
