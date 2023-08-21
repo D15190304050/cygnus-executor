@@ -19,6 +19,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import stark.coderaider.cygnus.executors.annotations.ScheduledJob;
 import stark.coderaider.cygnus.executors.invocation.InvocationInfo;
+import stark.coderaider.cygnus.executors.net.execution.ExecutorServer;
 import stark.coderaider.cygnus.executors.net.heartbeats.HeartbeatHandler;
 import stark.dataworks.basic.data.json.JsonSerializer;
 import stark.dataworks.boot.beans.BasePackageScanner;
@@ -43,6 +44,9 @@ public class ExecutorInitializer implements ApplicationContextAware, Application
 
     @Autowired
     private HeartbeatHandler heartbeatHandler;
+
+    @Autowired
+    private CygnusExecutorProperties cygnusExecutorProperties;
 
     private ApplicationContext applicationContext;
     private final HashMap<String, InvocationInfo> invocationMap;
@@ -208,6 +212,7 @@ public class ExecutorInitializer implements ApplicationContextAware, Application
      */
     private void startExecutorServer()
     {
-
+        ExecutorServer executorServer = new ExecutorServer(cygnusExecutorProperties.getPort(), invocationMap);
+        executorServer.start();
     }
 }

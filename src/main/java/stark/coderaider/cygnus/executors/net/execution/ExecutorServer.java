@@ -20,7 +20,6 @@ import java.util.HashMap;
 @Slf4j
 public class ExecutorServer
 {
-    private final HashMap<String, InvocationInfo> invocationMap;
     private final EventLoopGroup parentGroup;
     private final EventLoopGroup childGroup;
     private final ServerBootstrap serverBootstrap;
@@ -29,7 +28,6 @@ public class ExecutorServer
     public ExecutorServer(int port, HashMap<String, InvocationInfo> invocationMap)
     {
         this.port = port;
-        this.invocationMap = invocationMap;
 
         parentGroup = new NioEventLoopGroup(1);
         childGroup = new NioEventLoopGroup();
@@ -46,11 +44,12 @@ public class ExecutorServer
 
                     pipeline.addLast(new JsonDecoder());
                     pipeline.addLast(new JsonEncoder());
+                    pipeline.addLast(new ExecutorMessageInboundHandler(invocationMap));
                 }
             });
     }
 
-    private void start()
+    public void start()
     {
         try
         {
