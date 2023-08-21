@@ -86,8 +86,6 @@ public class ExecutorInitializer implements ApplicationContextAware, Application
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         MetadataReaderFactory readerFactory = new CachingMetadataReaderFactory(resourcePatternResolver);
 
-        log.info("basePackages = " + JsonSerializer.serialize(basePackages));
-
         try
         {
             for (String basePackage : basePackages)
@@ -95,15 +93,11 @@ public class ExecutorInitializer implements ApplicationContextAware, Application
                 String pattern = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + ClassUtils.convertClassNameToResourcePath(basePackage) + RESOURCE_PATTERN;
                 Resource[] resources = resourcePatternResolver.getResources(pattern);
 
-                log.info("resources = " + JsonSerializer.serialize(resources));
-
                 for (Resource resource : resources)
                 {
                     MetadataReader reader = readerFactory.getMetadataReader(resource);
                     String className = reader.getClassMetadata().getClassName();
                     Class<?> clazz = Class.forName(className);
-
-                    log.info("className = " + className);
 
                     ScheduledJob scheduledJob = clazz.getAnnotation(ScheduledJob.class);
 

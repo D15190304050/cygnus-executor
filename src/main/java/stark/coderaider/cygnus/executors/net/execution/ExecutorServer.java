@@ -51,22 +51,25 @@ public class ExecutorServer
 
     public void start()
     {
-        try
+        new Thread(() ->
         {
-            ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
+            try
+            {
+                ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
 
-            log.info("Cygnus executor server started...");
+                log.info("Cygnus executor server started...");
 
-            channelFuture.channel().closeFuture().sync();
-        }
-        catch (InterruptedException e)
-        {
-            ExceptionLogger.logExceptionInfo(e);
-        }
-        finally
-        {
-            parentGroup.shutdownGracefully();
-            childGroup.shutdownGracefully();
-        }
+                channelFuture.channel().closeFuture().sync();
+            }
+            catch (InterruptedException e)
+            {
+                ExceptionLogger.logExceptionInfo(e);
+            }
+            finally
+            {
+                parentGroup.shutdownGracefully();
+                childGroup.shutdownGracefully();
+            }
+        }).start();
     }
 }

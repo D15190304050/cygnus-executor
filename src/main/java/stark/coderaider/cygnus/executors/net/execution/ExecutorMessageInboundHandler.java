@@ -36,6 +36,12 @@ public class ExecutorMessageInboundHandler extends SimpleChannelInboundHandler<J
     }
 
     @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception
+    {
+        log.info("Connection established with " + ctx.channel().remoteAddress());
+    }
+
+    @Override
     protected void channelRead0(ChannelHandlerContext ctx, JsonMessage msg) throws Exception
     {
         threadPoolExecutor.submit(() ->
