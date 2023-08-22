@@ -23,5 +23,5 @@ public class CygnusExecutorProperties
     private int baseSleepTimeMs;
     private int maxRetries;
 
-    private int heartbeatMs = 30 * 1000;
+    private int heartbeatMs = 30000;
 }
