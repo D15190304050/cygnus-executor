@@ -97,6 +97,12 @@
             <artifactId>web-commons</artifactId>
             <version>${dataworks.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>stark.coderaider</groupId>
+            <artifactId>cgynus-commons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

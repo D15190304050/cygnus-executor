@@ -10,6 +10,8 @@ import java.util.*;
 
 public class HeartbeatHandler
 {
+    public static final String JOB_ZK_PREFIX = "/jobs/";
+
     private final int heartbeatMs;
     private final ZkQuickOperation zkQuickOperation;
     private final CygnusExecutorProperties cygnusExecutorProperties;
@@ -92,7 +94,7 @@ public class HeartbeatHandler
 
     private static String getZkPathOfJob(String applicationName, String jobName)
     {
-        return "/" + applicationName + "/" + jobName;
+        return JOB_ZK_PREFIX + applicationName + "/" + jobName;
     }
 
     private String getZkPathOfExecutorInstance(String zkPathOfJob)

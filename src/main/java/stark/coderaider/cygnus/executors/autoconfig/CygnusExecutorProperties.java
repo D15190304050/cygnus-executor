@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties("dataworks.cygnus.executor")
+@ConfigurationProperties("coderaider.cygnus.executor")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
