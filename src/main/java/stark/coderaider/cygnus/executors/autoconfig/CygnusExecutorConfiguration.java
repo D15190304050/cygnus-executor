@@ -34,6 +34,6 @@ public class CygnusExecutorConfiguration
     @Bean
     public HeartbeatHandler heartbeatHandler(ZkQuickOperation zkQuickOperation)
     {
-        return new HeartbeatHandler(cygnusExecutorProperties.getHeartbeatMs(), zkQuickOperation, cygnusExecutorProperties);
+        return new HeartbeatHandler(zkQuickOperation, cygnusExecutorProperties);
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Data
 public class CygnusExecutorProperties
 {
-    private String applicationName;
+    private String applicationId;
     private String groupName = "default";
     private int port = 28994;
 

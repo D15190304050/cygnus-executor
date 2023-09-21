@@ -2,16 +2,17 @@ package stark.coderaider.cygnus.executors.net.heartbeats;
 
 import org.apache.dubbo.common.utils.NetUtils;
 import org.apache.zookeeper.CreateMode;
+import stark.coderaider.cygnus.commons.ZkConstants;
+import stark.coderaider.cygnus.commons.jobs.CronSimpleJobBase;
 import stark.coderaider.cygnus.executors.autoconfig.CygnusExecutorProperties;
 import stark.coderaider.cygnus.executors.invocation.InvocationInfo;
+import stark.dataworks.basic.data.json.JsonSerializer;
 import stark.dataworks.basic.zk.ZkQuickOperation;
 
 import java.util.*;
 
 public class HeartbeatHandler
 {
-    public static final String JOB_ZK_PREFIX = "/jobs/";
-
     private final int heartbeatMs;
     private final ZkQuickOperation zkQuickOperation;
     private final CygnusExecutorProperties cygnusExecutorProperties;
@@ -20,9 +21,9 @@ public class HeartbeatHandler
 
     private final String localIpAddress;
 
-    public HeartbeatHandler(int heartbeatMs, ZkQuickOperation zkQuickOperation, CygnusExecutorProperties cygnusExecutorProperties)
+    public HeartbeatHandler(ZkQuickOperation zkQuickOperation, CygnusExecutorProperties cygnusExecutorProperties)
     {
-        this.heartbeatMs = heartbeatMs;
+        this.heartbeatMs = cygnusExecutorProperties.getHeartbeatMs();
         this.zkQuickOperation = zkQuickOperation;
         this.cygnusExecutorProperties = cygnusExecutorProperties;
 
@@ -32,20 +33,26 @@ public class HeartbeatHandler
 
     public void startHeartbeats(HashMap<String, InvocationInfo> invocationMap) throws Exception
     {
-        // 1. Convert invocationMap to ZK node info => (/cygnus/[applicationName]/[jobName, cron]/[group]/[IP:port, refreshTime])
+        // 1. Convert invocationMap to ZK node info => (/cygnus/[applicationName]/[jobName]/[IP:port, refreshTime])
         // 2. Start a new thread to send heartbeats periodically.
 
         for (String jobName : invocationMap.keySet())
         {
-            String applicationName = cygnusExecutorProperties.getApplicationName();
-            String zkPathOfJob = getZkPathOfJob(applicationName, jobName);
+            String applicationId = cygnusExecutorProperties.getApplicationId();
+            String zkPathOfJob = getZkPathOfJob(applicationId, jobName);
 
             InvocationInfo invocationInfo = invocationMap.get(jobName);
             String cron = invocationInfo.getCron();
+            CronSimpleJobBase cronSimpleJobBase = new CronSimpleJobBase();
+            cronSimpleJobBase.setCron(cron);
+            cronSimpleJobBase.setEnabled(true);
+            cronSimpleJobBase.setJobName(jobName);
 
-            zkQuickOperation.tryCreateNode(zkPathOfJob, cron, CreateMode.PERSISTENT);
+            // jobType:jobInfo
+            String jobData = cronSimpleJobBase.getJobTimerType().toString() + ZkConstants.DELIMITER + JsonSerializer.serialize(cronSimpleJobBase);
+            zkQuickOperation.tryCreateNode(zkPathOfJob, jobData, CreateMode.EPHEMERAL);
 
-            String zkPathOfExecutorInstance = getZkPathOfExecutorInstance(zkPathOfJob);
+            String zkPathOfExecutorInstance = getZkPathOfExecutorInstance(applicationId);
             heartbeatPaths.add(zkPathOfExecutorInstance);
         }
 
@@ -92,13 +99,15 @@ public class HeartbeatHandler
         }
     }
 
-    private static String getZkPathOfJob(String applicationName, String jobName)
+    private static String getZkPathOfJob(String applicationId, String jobName)
     {
-        return JOB_ZK_PREFIX + applicationName + "/" + jobName;
+        // /cygnus/[applicationId]/jobs/jobName
+        return "/" + applicationId + "/jobs/" + jobName;
     }
 
-    private String getZkPathOfExecutorInstance(String zkPathOfJob)
+    private String getZkPathOfExecutorInstance(String applicationId)
     {
-        return zkPathOfJob + "/" + cygnusExecutorProperties.getGroupName() + "/" + localIpAddress + ":" + cygnusExecutorProperties.getPort();
+        // /cygnus/[applicationId]/executors/[IP:port, refreshTime]
+        return "/" + applicationId + "/executors/" + localIpAddress + ":" + cygnusExecutorProperties.getPort();
     }
 }
