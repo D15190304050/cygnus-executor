@@ -3,7 +3,7 @@ package stark.coderaider.cygnus.executors.net.heartbeats;
 import org.apache.dubbo.common.utils.NetUtils;
 import org.apache.zookeeper.CreateMode;
 import stark.coderaider.cygnus.commons.ZkConstants;
-import stark.coderaider.cygnus.commons.jobs.CronSimpleJobBase;
+import stark.coderaider.cygnus.commons.jobs.CronJob;
 import stark.coderaider.cygnus.executors.autoconfig.CygnusExecutorProperties;
 import stark.coderaider.cygnus.executors.invocation.InvocationInfo;
 import stark.dataworks.basic.data.json.JsonSerializer;
@@ -33,7 +33,7 @@ public class HeartbeatHandler
 
     public void startHeartbeats(HashMap<String, InvocationInfo> invocationMap) throws Exception
     {
-        // 1. Convert invocationMap to ZK node info => (/cygnus/[applicationName]/[jobName]/[IP:port, refreshTime])
+        // 1. Convert invocationMap to ZK node info => (/cygnus/applicationIds/[applicationName]/[jobName]/[IP:port, refreshTime])
         // 2. Start a new thread to send heartbeats periodically.
 
         for (String jobName : invocationMap.keySet())
@@ -43,13 +43,13 @@ public class HeartbeatHandler
 
             InvocationInfo invocationInfo = invocationMap.get(jobName);
             String cron = invocationInfo.getCron();
-            CronSimpleJobBase cronSimpleJobBase = new CronSimpleJobBase();
-            cronSimpleJobBase.setCron(cron);
-            cronSimpleJobBase.setEnabled(true);
-            cronSimpleJobBase.setJobName(jobName);
+            CronJob CronJob = new CronJob();
+            CronJob.setCron(cron);
+            CronJob.setEnabled(true);
+            CronJob.setJobName(jobName);
 
             // jobType:jobInfo
-            String jobData = cronSimpleJobBase.getJobTimerType().toString() + ZkConstants.DELIMITER + JsonSerializer.serialize(cronSimpleJobBase);
+            String jobData = CronJob.getJobTimerType().toString() + ZkConstants.DELIMITER + JsonSerializer.serialize(CronJob);
             zkQuickOperation.tryCreateNode(zkPathOfJob, jobData, CreateMode.EPHEMERAL);
 
             String zkPathOfExecutorInstance = getZkPathOfExecutorInstance(applicationId);
@@ -101,13 +101,13 @@ public class HeartbeatHandler
 
     private static String getZkPathOfJob(String applicationId, String jobName)
     {
-        // /cygnus/[applicationId]/jobs/jobName
-        return "/" + applicationId + "/jobs/" + jobName;
+        // /cygnus/applicationIds/[applicationId]/jobs/jobName
+        return "/applicationIds/" + applicationId + "/jobs/" + jobName;
     }
 
     private String getZkPathOfExecutorInstance(String applicationId)
     {
-        // /cygnus/[applicationId]/executors/[IP:port, refreshTime]
-        return "/" + applicationId + "/executors/" + localIpAddress + ":" + cygnusExecutorProperties.getPort();
+        // /cygnus/applicationIds/[applicationId]/executors/[IP:port, refreshTime]
+        return "/applicationIds/" + applicationId + "/executors/" + localIpAddress + ":" + cygnusExecutorProperties.getPort();
     }
 }
