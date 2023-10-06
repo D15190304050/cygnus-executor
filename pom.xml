@@ -100,7 +100,7 @@
 
         <dependency>
             <groupId>stark.coderaider</groupId>
-            <artifactId>cgynus-commons</artifactId>
+            <artifactId>cygnus-commons</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

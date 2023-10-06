@@ -61,6 +61,8 @@ public class HeartbeatHandler
 
     private void startHeartbeatLoop()
     {
+        // TODO: Before starting the heartbeat loop, remove all non-existent jobs.
+
         TimerTask task = new TimerTask()
         {
             @Override
