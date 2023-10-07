@@ -11,7 +11,7 @@ import stark.dataworks.basic.zk.ZkQuickOperation;
 
 import java.util.*;
 
-public class HeartbeatHandler
+public class ExecutorHeartbeatService
 {
     private final int heartbeatMs;
     private final ZkQuickOperation zkQuickOperation;
@@ -21,7 +21,7 @@ public class HeartbeatHandler
 
     private final String localIpAddress;
 
-    public HeartbeatHandler(ZkQuickOperation zkQuickOperation, CygnusExecutorProperties cygnusExecutorProperties)
+    public ExecutorHeartbeatService(ZkQuickOperation zkQuickOperation, CygnusExecutorProperties cygnusExecutorProperties)
     {
         this.heartbeatMs = cygnusExecutorProperties.getHeartbeatMs();
         this.zkQuickOperation = zkQuickOperation;

@@ -20,8 +20,7 @@ import org.springframework.util.StringUtils;
 import stark.coderaider.cygnus.executors.annotations.ScheduledJob;
 import stark.coderaider.cygnus.executors.invocation.InvocationInfo;
 import stark.coderaider.cygnus.executors.net.execution.ExecutorServer;
-import stark.coderaider.cygnus.executors.net.heartbeats.HeartbeatHandler;
-import stark.dataworks.basic.data.json.JsonSerializer;
+import stark.coderaider.cygnus.executors.net.heartbeats.ExecutorHeartbeatService;
 import stark.dataworks.boot.beans.BasePackageScanner;
 
 import java.io.IOException;
@@ -30,10 +29,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -43,7 +38,7 @@ public class ExecutorInitializer implements ApplicationContextAware, Application
     public static final String CHECK_SUFFIX = ", please check your code & configuration.";
 
     @Autowired
-    private HeartbeatHandler heartbeatHandler;
+    private ExecutorHeartbeatService executorHeartbeatService;
 
     @Autowired
     private CygnusExecutorProperties cygnusExecutorProperties;
@@ -198,7 +193,7 @@ public class ExecutorInitializer implements ApplicationContextAware, Application
 
     private void startHeartbeats() throws Exception
     {
-        heartbeatHandler.startHeartbeats(invocationMap);
+        executorHeartbeatService.startHeartbeats(invocationMap);
     }
 
     /**

@@ -7,7 +7,7 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import stark.coderaider.cygnus.executors.net.heartbeats.HeartbeatHandler;
+import stark.coderaider.cygnus.executors.net.heartbeats.ExecutorHeartbeatService;
 import stark.dataworks.basic.zk.ZkQuickOperation;
 
 @Configuration
@@ -32,8 +32,8 @@ public class CygnusExecutorConfiguration
     }
 
     @Bean
-    public HeartbeatHandler heartbeatHandler(ZkQuickOperation zkQuickOperation)
+    public ExecutorHeartbeatService heartbeatHandler(ZkQuickOperation zkQuickOperation)
     {
-        return new HeartbeatHandler(zkQuickOperation, cygnusExecutorProperties);
+        return new ExecutorHeartbeatService(zkQuickOperation, cygnusExecutorProperties);
     }
 }
